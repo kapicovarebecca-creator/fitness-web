@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[YOUR NAME] — Personalised meal &amp; training plans</title>
+<meta name="description" content="A meal plan and a training plan built around your body, your schedule and the food you actually eat.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#141414;
+  --ink-soft:#5C5C58;
+  --paper:#F7F7F5;
+  --white:#FFFFFF;
+  --red:#E8402A;
+  --red-deep:#BF2E1A;
+  --stone:#E8E8E4;
+  --bone:#EFEEEA;
+  --line:#DDDDD8;
+  --radius:14px;
+  --display:"Archivo",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}
+}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2{font-family:var(--display);font-weight:700;letter-spacing:-.02em;line-height:1.1;margin:0}
+h3{font-family:var(--body);font-weight:600;letter-spacing:-.01em;line-height:1.3;margin:0}
+h1{font-size:clamp(2.2rem,7vw,3.9rem)}
+h2{font-size:clamp(1.8rem,5vw,2.7rem)}
+h3{font-size:1.18rem}
+p{margin:0 0 1rem}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 20px}
+.narrow{max-width:660px}
+section{padding:72px 0}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:4px}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:50;background:var(--ink);color:var(--white);border-bottom:1px solid rgba(255,255,255,.18)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:14px;padding-bottom:14px}
+.mark{font-family:var(--display);font-weight:700;font-size:1.3rem;letter-spacing:-.02em;text-decoration:none;line-height:1.1}
+@media(min-width:720px){.mark{font-size:1.5rem}}
+.mark span{opacity:.65;font-weight:600}
+.nav-cta{background:var(--red);color:var(--white);text-decoration:none;font-weight:600;font-size:.92rem;padding:9px 16px;border-radius:999px;white-space:nowrap}
+.nav-cta:hover{background:var(--red-deep);color:var(--white)}
+
+/* ---------- top banner ---------- */
+.banner{background:var(--bone);border-bottom:1px solid rgba(23,21,15,.16)}
+.banner-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.banner a{position:relative;display:flex;flex-direction:column;justify-content:center;gap:5px;
+  text-align:center;text-decoration:none;padding:15px 8px;
+  border-right:1px solid rgba(23,21,15,.16)}
+.banner a:last-child{border-right:0}
+.banner a:hover{background:rgba(23,21,15,.05)}
+.banner a strong{font-family:var(--display);font-weight:600;font-size:1rem;letter-spacing:-.01em;line-height:1.15}
+.banner a em{font-style:normal;font-size:.83rem;color:var(--ink-soft);display:none;line-height:1.35}
+.banner a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:4px;
+  background:var(--red);transform:scaleX(0);transition:transform .18s ease}
+.banner a:hover::after,.banner a:focus-visible::after{transform:scaleX(1)}
+@media(min-width:720px){
+  .banner a{padding:20px 18px}
+  .banner a strong{font-size:1.15rem}
+  .banner a em{display:block}
+}
+
+/* ---------- hero ---------- */
+.hero{background:var(--ink);color:var(--white);padding:56px 0 72px}
+.hero h1{max-width:16ch}
+.hero .lede{font-size:1.12rem;max-width:46ch;color:rgba(255,255,255,.86);margin-top:20px}
+.hero-grid{display:grid;gap:40px}
+@media(min-width:900px){
+  .hero{padding:84px 0 96px}
+  .hero-grid{grid-template-columns:1.05fr .95fr;align-items:center;gap:56px}
+}
+.btn{
+  display:inline-block;background:var(--red);color:var(--white);
+  text-decoration:none;font-weight:600;font-size:1.02rem;
+  padding:15px 28px;border-radius:999px;border:none;cursor:pointer;
+  font-family:var(--body);
+}
+.btn:hover{background:var(--red-deep)}
+.btn-red{background:var(--red);color:var(--white)}
+.btn-red:hover{background:var(--red-deep)}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:28px}
+.hero-note{font-size:.92rem;color:rgba(255,255,255,.72);margin:0}
+
+/* ---------- the plan card (hero visual) ---------- */
+.plan{background:var(--white);color:var(--ink);border-radius:var(--radius);padding:22px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.plan-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.plan-name{font-family:var(--display);font-weight:700;font-size:1.3rem;letter-spacing:-.02em}
+.plan-week{font-size:.82rem;color:var(--ink-soft);font-weight:500}
+.plan-row{display:grid;grid-template-columns:52px 1fr;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.plan-row:last-child{border-bottom:0}
+.plan-day{font-weight:600;font-size:.86rem;color:var(--red)}
+.plan-what{font-size:.94rem;line-height:1.4}
+.plan-what em{font-style:normal;color:var(--ink-soft);display:block;font-size:.85rem;margin-top:2px}
+.plan-foot{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);font-size:.84rem;color:var(--ink-soft)}
+
+/* ---------- steps ---------- */
+.steps{display:grid;gap:0;margin-top:44px;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:44px 1fr;gap:18px;padding:26px 0;border-bottom:1px solid var(--line)}
+.step-n{font-family:var(--display);font-weight:700;font-size:1.6rem;color:var(--red);line-height:1}
+.step p{margin:8px 0 0;color:var(--ink-soft);max-width:58ch}
+@media(min-width:760px){.step{grid-template-columns:60px 1fr;gap:26px}}
+
+/* ---------- inside ---------- */
+.inside{background:var(--stone)}
+.cols{display:grid;gap:36px;margin-top:40px}
+@media(min-width:820px){.cols{grid-template-columns:1fr 1fr;gap:56px}}
+.col h3{font-family:var(--display);font-weight:700;font-size:1.45rem;letter-spacing:-.02em;margin-bottom:16px}
+.ticks{list-style:none;margin:0;padding:0}
+.ticks li{padding:11px 0 11px 30px;border-bottom:1px solid rgba(23,21,15,.14);position:relative;font-size:1rem}
+.ticks li:last-child{border-bottom:0}
+.ticks li::before{content:"";position:absolute;left:2px;top:19px;width:9px;height:9px;background:var(--red);border-radius:2px}
+
+/* ---------- pricing ---------- */
+.tiers{display:grid;gap:20px;margin-top:40px}
+@media(min-width:820px){.tiers{grid-template-columns:1fr 1fr;gap:24px}}
+.tier{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.tier-pick{background:var(--ink);color:#EDEDEA;border-color:var(--ink)}
+.tier-pick .tier-price{color:var(--red)}
+.tier-pick .ticks li{border-bottom-color:rgba(251,248,242,.16)}
+.tier-pick .ticks li::before{background:var(--red)}
+.tier-price{font-family:var(--display);font-weight:700;font-size:2.4rem;color:var(--red);letter-spacing:-.03em;margin:12px 0 4px}
+.tier-per{font-size:.9rem;color:var(--ink-soft)}
+.tier-pick .tier-per{color:rgba(251,248,242,.7)}
+.tier .btn{margin-top:22px;width:100%;text-align:center}
+
+/* ---------- coach ---------- */
+.coach{display:grid;gap:30px;align-items:center}
+@media(min-width:820px){.coach{grid-template-columns:320px 1fr;gap:50px}}
+.coach-photo{aspect-ratio:4/5;background:var(--white);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;text-align:center;color:var(--ink-soft);font-size:.9rem;padding:20px}
+.quotes{display:grid;gap:18px;margin-top:40px}
+@media(min-width:820px){.quotes{grid-template-columns:repeat(3,1fr)}}
+.quote{background:var(--white);border-left:3px solid var(--red);padding:20px 22px;border-radius:0 var(--radius) var(--radius) 0}
+.quote p{font-size:.97rem;margin-bottom:12px}
+.quote cite{font-style:normal;font-size:.86rem;color:var(--ink-soft);font-weight:500}
+
+/* ---------- faq ---------- */
+.faq{margin-top:36px;border-top:1px solid var(--line)}
+details{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;list-style:none;padding:20px 32px 20px 0;font-weight:600;position:relative;font-size:1.03rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:18px;font-size:1.5rem;color:var(--red);line-height:1}
+details[open] summary::after{content:"\2013"}
+details p{color:var(--ink-soft);padding-right:32px;max-width:64ch}
+
+/* ---------- form ---------- */
+.apply{background:var(--ink);color:var(--paper)}
+.apply h2{color:var(--paper)}
+.apply .sub{color:rgba(251,248,242,.72);max-width:48ch}
+.form{background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:26px;margin-top:34px}
+@media(min-width:760px){.form{padding:36px}}
+.field{margin-bottom:22px}
+.field label,.field legend{display:block;font-weight:600;font-size:.97rem;margin-bottom:8px;padding:0}
+.field .hint{font-weight:400;color:var(--ink-soft);font-size:.87rem;display:block;margin-top:2px}
+input[type=text],input[type=email],select,textarea{
+  width:100%;font-family:var(--body);font-size:1rem;color:var(--ink);
+  padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:var(--white);
+}
+textarea{min-height:96px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{position:relative;margin:0;font-weight:400}
+.chip input{position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;margin:0;cursor:pointer}
+.chip span{display:block;padding:10px 16px;border:1px solid var(--line);border-radius:999px;background:var(--white);font-size:.94rem}
+.chip input:checked+span{background:var(--red);color:var(--white);border-color:var(--red)}
+.chip input:focus-visible+span{outline:3px solid var(--red);outline-offset:2px}
+.form-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:6px}
+.status{font-size:.92rem;color:var(--red-deep);min-height:1.4em;margin:10px 0 0}
+.privacy{font-size:.85rem;color:var(--ink-soft);margin-top:18px}
+
+/* ---------- footer ---------- */
+footer{background:#0C0C0C;color:rgba(255,255,255,.8);padding:44px 0;font-size:.92rem}
+footer a{color:var(--white)}
+.foot-links{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:14px}
+.disclaimer{max-width:62ch;font-size:.84rem;color:rgba(255,255,255,.6);margin:18px 0 0}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="mark" href="#top">[YOUR NAME] <span>coaching</span></a>
+    <a class="nav-cta" href="#apply">Start my plan</a>
+  </div>
+</nav>
+
+<div class="banner">
+  <div class="wrap banner-grid">
+    <a href="#about"><strong>About me</strong><em>Who I am and how I got here</em></a>
+    <a href="#what"><strong>Plans</strong><em>What's in them, what they cost</em></a>
+    <a href="#apply"><strong>Contact</strong><em>Start your plan or ask me anything</em></a>
+  </div>
+</div>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Tell me about your week and I'll build the plan around it</h1>
+      <p class="lede">A meal plan built from food you actually like, and a training plan for the days you can actually train. Nine questions to start, then we adjust it together as you go.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#apply">Start my plan</a>
+        <p class="hero-note">Takes about 3 minutes</p>
+      </div>
+    </div>
+
+    <div class="plan" role="img" aria-label="Example of a personalised weekly plan showing training sessions and meals for each day.">
+      <div class="plan-head">
+        <div class="plan-name">Marta R.</div>
+        <div class="plan-week">Week 3 &middot; home + dumbbells</div>
+      </div>
+      <div class="plan-row"><div class="plan-day">Mon</div><div class="plan-what">Lower body &mdash; 5 exercises<em>Dinner: chicken, rice, roasted peppers</em></div></div>
+      <div class="plan-row"><div class="plan-day">Tue</div><div class="plan-what">Rest + 30 min walk<em>Dinner: lentil stew, bread</em></div></div>
+      <div class="plan-row"><div class="plan-day">Wed</div><div class="plan-what">Push &mdash; 5 exercises<em>Dinner: salmon, potatoes, greens</em></div></div>
+      <div class="plan-row"><div class="plan-day">Thu</div><div class="plan-what">Pull &mdash; 5 exercises<em>Dinner: turkey pasta, salad</em></div></div>
+      <div class="plan-foot">No mushrooms, no shellfish. Everything cooks in under 25 minutes. Trains Mon&ndash;Thu only.</div>
+    </div>
+  </div>
+</header>
+
+<section id="how">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div>
+          <h3>You answer the questionnaire</h3>
+          <p>Your goal, how many days a week you can train, what equipment you have, what you like eating and what you won't eat. It's at the bottom of this page.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div>
+          <h3>I write your plan</h3>
+          <p>Within 48 hours you get your meal plan and your training plan, built from your answers. If something in it doesn't fit your life, tell me and I'll change it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div>
+          <h3>We adjust as you go</h3>
+          <p>You check in with me each month. Plans stop working when life changes &mdash; new job, injury, holiday &mdash; so we rewrite them when they need it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="inside" id="what">
+  <div class="wrap">
+    <h2>What you get</h2>
+    <div class="cols">
+      <div class="col" id="meal-plan">
+        <h3>Your meal plan</h3>
+        <ul class="ticks">
+          <li>Meals built from food you already like</li>
+          <li>Allergies and anything you don't eat, left out</li>
+          <li>Recipes with a shopping list for the week</li>
+          <li>Swaps for every meal, for when plans change</li>
+          <li>Options for eating out and travelling</li>
+        </ul>
+      </div>
+      <div class="col" id="training-plan">
+        <h3>Your training plan</h3>
+        <ul class="ticks">
+          <li>Built for the days you can actually train</li>
+          <li>Matched to your equipment &mdash; gym, home or bodyweight</li>
+          <li>Video for every exercise, so form isn't guesswork</li>
+          <li>A simple way to track what you lifted</li>
+          <li>Progression planned week by week</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Pricing</h2>
+    <p class="narrow" style="color:var(--ink-soft);margin-top:14px">Cancel any time. No contract.</p>
+    <div class="tiers">
+      <div class="tier">
+        <h3>The plan</h3>
+        <div class="tier-price">&euro;XX</div>
+        <div class="tier-per">one-off</div>
+        <ul class="ticks" style="margin-top:18px">
+          <li>Your meal plan</li>
+          <li>Your training plan</li>
+          <li>One round of changes</li>
+        </ul>
+        <a class="btn btn-red" href="#apply">Start my plan</a>
+      </div>
+      <div class="tier tier-pick">
+        <h3>Plan + coaching</h3>
+        <div class="tier-price">&euro;XX</div>
+        <div class="tier-per">per month</div>
+        <ul class="ticks" style="margin-top:18px">
+          <li>Everything in The plan</li>
+          <li>Rewritten each month around your progress</li>
+          <li>Message me directly through the week</li>
+          <li>A check-in call every month</li>
+        </ul>
+        <a class="btn" href="#apply">Start my plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="inside" id="about">
+  <div class="wrap coach">
+    <div class="coach-photo">Replace with a photo of you &mdash;<br>ideally training or cooking</div>
+    <div>
+      <h2>Who's writing it</h2>
+      <p style="margin-top:18px">I'm [YOUR NAME]. [Your qualification &mdash; e.g. certified personal trainer, nutrition coach]. I've been coaching for [X] years and written plans for [X] people.</p>
+      <p>[Two or three sentences on how you got into this and who you're best at helping. Say the true thing &mdash; people arriving from your videos already half-know you, and this is where they decide whether to trust you with their money.]</p>
+      <p style="color:var(--ink-soft);font-size:.95rem">Find me on <a href="https://instagram.com/yourhandle">Instagram</a> and <a href="https://tiktok.com/@yourhandle">TikTok</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What members say</h2>
+    <div class="quotes">
+      <div class="quote">
+        <p>[Short quote. The best ones are specific about a problem you solved, not "amazing coach".]</p>
+        <cite>&mdash; First name, city</cite>
+      </div>
+      <div class="quote">
+        <p>[Short quote.]</p>
+        <cite>&mdash; First name, city</cite>
+      </div>
+      <div class="quote">
+        <p>[Short quote.]</p>
+        <cite>&mdash; First name, city</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap narrow" id="faq">
+    <h2>Questions</h2>
+    <div class="faq">
+      <details>
+        <summary>How fast will I see results?</summary>
+        <p>That depends on your starting point, your consistency and your sleep, and anyone who gives you a number without knowing you is guessing. What I can promise is a plan you can actually keep to, and honest feedback every month.</p>
+      </details>
+      <details>
+        <summary>I'm a complete beginner. Is this for me?</summary>
+        <p>Yes. Tell me that in the questionnaire and your first weeks get built to teach you the movements before anything gets heavy.</p>
+      </details>
+      <details>
+        <summary>I don't have a gym membership.</summary>
+        <p>Fine. Tell me what you do have &mdash; dumbbells, bands, a pull-up bar, or nothing at all &mdash; and the plan is written around that.</p>
+      </details>
+      <details>
+        <summary>I'm vegetarian, vegan, coeliac, or allergic to something.</summary>
+        <p>Say so in the questionnaire and it won't appear in your plan. If you're managing a medical condition, have a history of disordered eating, or you're pregnant, please talk to your doctor or a registered dietitian first &mdash; that's outside what I can coach.</p>
+      </details>
+      <details>
+        <summary>Can I message you if something isn't working?</summary>
+        <p>On the monthly plan, yes, any time through the week. On the one-off plan you get one round of changes after you receive it.</p>
+      </details>
+      <details>
+        <summary>How do I pay?</summary>
+        <p>[Card, PayPal, Bizum &mdash; say which, and say whether the monthly plan renews automatically.]</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="apply" id="apply">
+  <div class="wrap narrow">
+    <h2>Start my plan</h2>
+    <p class="sub" style="margin-top:18px">Answer these and I'll come back to you within 48 hours with what your plan would look like and what it costs.</p>
+
+    <div class="form">
+      <div class="field">
+        <label for="f-name">Your name</label>
+        <input type="text" id="f-name" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="f-contact">Email or Instagram handle<span class="hint">Wherever you'd rather I reply.</span></label>
+        <input type="text" id="f-contact">
+      </div>
+
+      <div class="field">
+        <label for="f-goal">What are you working towards?</label>
+        <select id="f-goal">
+          <option>Build muscle</option>
+          <option>Get stronger</option>
+          <option>Lose body fat</option>
+          <option>Feel healthier and have more energy</option>
+          <option>Train for a specific event</option>
+          <option>Not sure yet &mdash; help me work it out</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="f-days">Days a week you can realistically train</label>
+        <select id="f-days">
+          <option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option>
+        </select>
+      </div>
+
+      <fieldset class="field" style="border:0;padding:0;margin-inline:0">
+        <legend>What do you have access to?</legend>
+        <div class="chips" id="f-kit">
+          <label class="chip"><input type="checkbox" value="Full gym"><span>Full gym</span></label>
+          <label class="chip"><input type="checkbox" value="Dumbbells"><span>Dumbbells</span></label>
+          <label class="chip"><input type="checkbox" value="Bands"><span>Bands</span></label>
+          <label class="chip"><input type="checkbox" value="Pull-up bar"><span>Pull-up bar</span></label>
+          <label class="chip"><input type="checkbox" value="Bodyweight only"><span>Bodyweight only</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="f-exp">How long have you been training?</label>
+        <select id="f-exp">
+          <option>Starting from zero</option>
+          <option>On and off for a while</option>
+          <option>Under a year, consistently</option>
+          <option>Over a year, consistently</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="f-food">Food you won't eat<span class="hint">Allergies, intolerances, anything you dislike, anything you avoid for religious or ethical reasons.</span></label>
+        <textarea id="f-food"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="f-cook">How much time do you have to cook on a normal day?</label>
+        <select id="f-cook">
+          <option>Under 15 minutes</option>
+          <option>15&ndash;30 minutes</option>
+          <option>30 minutes or more</option>
+          <option>I'd rather batch cook once a week</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="f-anything">Anything else I should know?<span class="hint">Injuries, shift work, a medical condition, what's gone wrong for you before.</span></label>
+        <textarea id="f-anything"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-red" id="send">Send my answers</button>
+        <button class="btn" id="copy" style="background:var(--white);color:var(--ink);border:1px solid var(--line)">Copy answers instead</button>
+      </div>
+      <p class="status" id="status" role="status"></p>
+      <p class="privacy">Your answers come straight to me and are only used to write your plan.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="https://instagram.com/yourhandle">Instagram</a>
+      <a href="https://tiktok.com/@yourhandle">TikTok</a>
+      <a href="mailto:your@email.com">your@email.com</a>
+    </div>
+    <div>&copy; <span id="yr"></span> [YOUR NAME]. [City], Spain.</div>
+    <p class="disclaimer">Coaching and nutrition guidance only. This isn't medical advice and isn't a substitute for care from your doctor or a registered dietitian. If you're pregnant, managing a health condition, or have a history of disordered eating, please speak to a medical professional before starting.</p>
+  </div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+
+
+
+var EMAIL = 'your@email.com'; // <-- put your email address here
+
+function collect(){
+  var kit = [].slice.call(document.querySelectorAll('#f-kit input:checked'))
+    .map(function(i){return i.value}).join(', ') || '-';
+  var v = function(id){ return document.getElementById(id).value.trim() || '-'; };
+  return [
+    'Name: ' + v('f-name'),
+    'Contact: ' + v('f-contact'),
+    'Goal: ' + v('f-goal'),
+    'Training days: ' + v('f-days'),
+    'Equipment: ' + kit,
+    'Experience: ' + v('f-exp'),
+    "Won't eat: " + v('f-food'),
+    'Time to cook: ' + v('f-cook'),
+    'Other: ' + v('f-anything')
+  ].join('\n');
+}
+
+function say(msg){ document.getElementById('status').textContent = msg; }
+
+document.getElementById('send').addEventListener('click', function(){
+  var name = document.getElementById('f-name').value.trim();
+  var contact = document.getElementById('f-contact').value.trim();
+  if(!name || !contact){ say('Add your name and a way to reach you first.'); return; }
+  window.location.href = 'mailto:' + EMAIL +
+    '?subject=' + encodeURIComponent('New plan request - ' + name) +
+    '&body=' + encodeURIComponent(collect());
+  say('Opening your email app. If nothing happens, use "Copy answers instead" and send them to me on Instagram.');
+});
+
+document.getElementById('copy').addEventListener('click', function(){
+  var text = collect();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      say('Copied. Paste it into a DM and send it over.');
+    }, function(){ say('Copy failed - please select your answers manually.'); });
+  } else {
+    say('Copying is not supported in this browser.');
+  }
+});
+</script>
+</body>
+</html>
